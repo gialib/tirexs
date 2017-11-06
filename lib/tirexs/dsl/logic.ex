@@ -1,6 +1,5 @@
 defmodule Tirexs.DSL.Logic do
-  @moduledoc false
-  @note """
+  @moduledoc """
   Defines a main module which provides a common contract for DSL handlers and common utilities.
   """
 
