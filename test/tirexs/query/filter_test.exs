@@ -34,6 +34,15 @@ defmodule Tirexs.Query.FilterTest do
     assert query == expected
   end
 
+  test "filter w/ terms if false" do
+    query = filter do
+      terms "user", ["kimchy", "elasticsearch"], execution: "bool", _cache: true, if: false
+    end
+
+    expected = [filter: []]
+    assert query == expected
+  end
+
 
   test "filter w/ exists" do
     query = filter do

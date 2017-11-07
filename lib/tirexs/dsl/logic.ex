@@ -53,10 +53,24 @@ defmodule Tirexs.DSL.Logic do
 
   @doc false
   def extract_options(params) do
+    options = get_options(params)
+
+    condition =
+      cond do
+        Keyword.has_key?(options, :if) -> !!options[:if]
+        Keyword.has_key?(options, :not) -> !options[:not]
+        true -> true
+      end
+
+    options =
+      options
+      |> Keyword.delete(:if)
+      |> Keyword.delete(:not)
+
     if length(params) > 1 do
-      [Enum.fetch!(params, 0), Enum.fetch!(params, 1), get_options(params)]
+      [Enum.fetch!(params, 0), Enum.fetch!(params, 1), options, condition]
     else
-      [Enum.fetch!(params, 0), [],[]]
+      [Enum.fetch!(params, 0), [], [], condition]
     end
   end
 

@@ -32,26 +32,46 @@ defmodule Tirexs.Query.Filter do
 
   @doc false
   def exists(options) do
-    [value, _, _] = extract_options(options)
-    [exists: [field: value]]
+    [value, _, _, condition] = extract_options(options)
+
+    if condition do
+      [exists: [field: value]]
+    else
+      []
+    end
   end
 
   @doc false
   def limit(options) do
-   [value, _, _] = extract_options(options)
-   [limit: [value: value]]
+    [value, _, _, condition] = extract_options(options)
+
+    if condition do
+      [limit: [value: value]]
+    else
+      []
+    end
   end
 
   @doc false
   def type(options) do
-    [value, _, _] = extract_options(options)
-    [type: [value: value]]
+    [value, _, _, condition] = extract_options(options)
+
+    if condition do
+      [type: [value: value]]
+    else
+      []
+    end
   end
 
   @doc false
   def missing(options) do
-    [value, options, _] = extract_options(options)
-    [missing: [field: value] ++ options]
+    [value, options, _, condition] = extract_options(options)
+
+    if condition do
+      [missing: [field: value] ++ options]
+    else
+      []
+    end
   end
 
   @doc false
@@ -71,8 +91,13 @@ defmodule Tirexs.Query.Filter do
 
   @doc false
   def numeric_range(options) do
-    [field, value, _] = extract_options(options)
-    [numeric_range: Keyword.put([], to_atom(field), value)]
+    [field, value, _, condition] = extract_options(options)
+
+    if condition do
+      [numeric_range: Keyword.put([], to_atom(field), value)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -92,8 +117,13 @@ defmodule Tirexs.Query.Filter do
 
   @doc false
   def script(options) do
-    [script, params, _] = extract_options(options)
-    [script: [script: script, params: params]]
+    [script, params, _, condition] = extract_options(options)
+
+    if condition do
+      [script: [script: script, params: params]]
+    else
+      []
+    end
   end
 
   @doc false
@@ -143,25 +173,45 @@ defmodule Tirexs.Query.Filter do
 
   @doc false
   def geo_bounding_box(options) do
-    [field, value, options] = extract_options(options)
-    [geo_bounding_box: Keyword.put([], to_atom(field), value) ++ options]
+    [field, value, options, condition] = extract_options(options)
+
+    if condition do
+      [geo_bounding_box: Keyword.put([], to_atom(field), value) ++ options]
+    else
+      []
+    end
   end
 
   @doc false
   def geo_distance(options) do
-    [field, value, options] = extract_options(options)
-    [geo_distance: Keyword.put([], to_atom(field), value) ++ options]
+    [field, value, options, condition] = extract_options(options)
+
+    if condition do
+      [geo_distance: Keyword.put([], to_atom(field), value) ++ options]
+    else
+      []
+    end
   end
 
   @doc false
   def geo_distance_range(options) do
-    [field, value, options] = extract_options(options)
-    [geo_distance_range: Keyword.put([], to_atom(field), value) ++ options]
+    [field, value, options, condition] = extract_options(options)
+
+    if condition do
+      [geo_distance_range: Keyword.put([], to_atom(field), value) ++ options]
+    else
+      []
+    end
   end
 
   @doc false
   def geo_polygon(options) do
-    [field, value, options] = extract_options(options)
-    [geo_polygon: Keyword.put([], to_atom(field), [points: value]) ++ options]
+    [field, value, options, condition] = extract_options(options)
+
+    if condition do
+      [geo_polygon: Keyword.put([], to_atom(field), [points: value]) ++ options]
+    else
+      []
+    end
   end
 end

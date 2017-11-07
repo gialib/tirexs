@@ -30,33 +30,56 @@ defmodule Tirexs.Query do
     case options do
       [options] -> [match: extract(extract_do([options]))]
       _ ->
-        [field, value, options] = extract_options(options)
-        [match: Keyword.put([], to_atom(field), [query: value] ++ options)]
+        [field, value, options, condition] = extract_options(options)
+
+        if condition do
+          [match: Keyword.put([], to_atom(field), [query: value] ++ options)]
+        else
+          []
+        end
     end
   end
 
   @doc false
   def range(options) do
-    [field, value, _] = extract_options(options)
-    [range: Keyword.put([], to_atom(field), value)]
+    [field, value, _, condition] = extract_options(options)
+
+    if condition do
+      [range: Keyword.put([], to_atom(field), value)]
+    end
   end
 
   @doc false
   def multi_match(options) do
-    [query, fields, options] = extract_options(options)
-    [multi_match: [query: query, fields: fields] ++ options]
+    [query, fields, options, condition] = extract_options(options)
+
+    if condition do
+      [multi_match: [query: query, fields: fields] ++ options]
+    else
+      []
+    end
   end
 
   @doc false
   def match_phrase(options) do
-    [field,value, _] = extract_options(options)
-    [match_phrase: Keyword.put([], to_atom(field), value)]
+    [field,value, _, condition] = extract_options(options)
+
+    if condition do
+      [match_phrase: Keyword.put([], to_atom(field), value)]
+    else
+      []
+    end
   end
 
   @doc false
   def match_phrase_prefix(options) do
-    [field,value, _] = extract_options(options)
-    [match_phrase_prefix: Keyword.put([], to_atom(field), value)]
+    [field, value, _, condition] = extract_options(options)
+
+    if condition do
+      [match_phrase_prefix: Keyword.put([], to_atom(field), value)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -113,14 +136,24 @@ defmodule Tirexs.Query do
 
   @doc false
   def ids(options) do
-    [type, values, _] = extract_options(options)
-    [ids: [type: type, values: values]]
+    [type, values, _, condition] = extract_options(options)
+
+    if condition do
+      [ids: [type: type, values: values]]
+    else
+      []
+    end
   end
 
   @doc false
   def query_string(options) do
-    [query, options, _] = extract_options(options)
-    [query_string: [query: query] ++ options]
+    [query, options, _, condition] = extract_options(options)
+
+    if condition do
+      [query_string: [query: query] ++ options]
+    else
+      []
+    end
   end
 
   @doc false
@@ -185,8 +218,13 @@ defmodule Tirexs.Query do
 
   @doc false
   def term(options) do
-    [field, values, options] = extract_options(options)
-    [term: Keyword.put(options, to_atom(field), values)]
+    [field, values, options, condition] = extract_options(options)
+
+    if condition do
+      [term: Keyword.put(options, to_atom(field), values)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -194,8 +232,13 @@ defmodule Tirexs.Query do
     opts = case Enum.count(options) do
       1 -> Enum.fetch!(options, 0)
       _ ->
-        [field, values, _] = extract_options(options)
-        Keyword.put([], to_atom(field), values)
+        [field, values, _, condition] = extract_options(options)
+
+        if condition do
+          Keyword.put([], to_atom(field), values)
+        else
+          []
+        end
     end
 
     [field: opts]
@@ -203,20 +246,35 @@ defmodule Tirexs.Query do
 
   @doc false
   def flt(options) do
-    [value, fields, options] = extract_options(options)
-    [fuzzy_like_this: [like_text: value, fields: fields] ++ options]
+    [value, fields, options, condition] = extract_options(options)
+
+    if condition do
+      [fuzzy_like_this: [like_text: value, fields: fields] ++ options]
+    else
+      []
+    end
   end
 
   @doc false
   def flt_field(options) do
-    [field, options, _] = extract_options(options)
-    [fuzzy_like_this_field: Keyword.put([], to_atom(field), options)]
+    [field, options, _, condition] = extract_options(options)
+
+    if condition do
+      [fuzzy_like_this_field: Keyword.put([], to_atom(field), options)]
+    else
+      []
+    end
   end
 
   @doc false
   def fuzzy(options) do
-    [field, values, _] = extract_options(options)
-    [fuzzy: Keyword.put([], to_atom(field), values)]
+    [field, values, _, condition] = extract_options(options)
+
+    if condition do
+      [fuzzy: Keyword.put([], to_atom(field), values)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -256,20 +314,35 @@ defmodule Tirexs.Query do
 
   @doc false
   def mlt(options) do
-    [value, fields, options] = extract_options(options)
-    [more_like_this: [like_text: value, fields: fields] ++ options]
+    [value, fields, options, condition] = extract_options(options)
+
+    if condition do
+      [more_like_this: [like_text: value, fields: fields] ++ options]
+    else
+      []
+    end
   end
 
   @doc false
   def mlt_field(options) do
-    [field, options, _] = extract_options(options)
-    [more_like_this_field: Keyword.put([], to_atom(field), options)]
+    [field, options, _, condition] = extract_options(options)
+
+    if condition do
+      [more_like_this_field: Keyword.put([], to_atom(field), options)]
+    else
+      []
+    end
   end
 
   @doc false
   def prefix(options) do
-    [field, values, _] = extract_options(options)
-    [prefix: Keyword.put([], to_atom(field), values)]
+    [field, values, _, condition] = extract_options(options)
+
+    if condition do
+      [prefix: Keyword.put([], to_atom(field), values)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -289,8 +362,13 @@ defmodule Tirexs.Query do
 
   @doc false
   def span_term(options) do
-    [field, options, _] = extract_options(options)
-    [span_term: Keyword.put([], to_atom(field), options)]
+    [field, options, _, condition] = extract_options(options)
+
+    if condition do
+      [span_term: Keyword.put([], to_atom(field), options)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -341,8 +419,13 @@ defmodule Tirexs.Query do
 
   @doc false
   def terms(options) do
-    [field, value, options] = extract_options(options)
-    [terms: Keyword.put([], to_atom(field), value) ++ options]
+    [field, value, options, condition] = extract_options(options)
+
+    if condition do
+      [terms: Keyword.put([], to_atom(field), value) ++ options]
+    else
+      []
+    end
   end
 
   @doc false
@@ -362,8 +445,13 @@ defmodule Tirexs.Query do
 
   @doc false
   def wildcard(options) do
-    [field, options, _] = extract_options(options)
-    [wildcard: Keyword.put([], to_atom(field), options)]
+    [field, options, _, condition] = extract_options(options)
+
+    if condition do
+      [wildcard: Keyword.put([], to_atom(field), options)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -383,8 +471,13 @@ defmodule Tirexs.Query do
 
   @doc false
   def text(options) do
-    [field, values, _] = extract_options(options)
-    [text: Keyword.put([], to_atom(field), values)]
+    [field, values, _, condition] = extract_options(options)
+
+    if condition do
+      [text: Keyword.put([], to_atom(field), values)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -475,8 +568,13 @@ defmodule Tirexs.Query do
 
   @doc false
   def boost(options) do
-    [value, _, _] = extract_options(options)
-    [boost: value]
+    [value, _, _, condition] = extract_options(options)
+
+    if condition do
+      [boost: value]
+    else
+      []
+    end
   end
 
   @doc false
@@ -589,14 +687,24 @@ defmodule Tirexs.Query do
 
   @doc false
   def text_phrase(options) do
-    [field, values, _] = extract_options(options)
-    [text_phrase: Keyword.put([], to_atom(field), values)]
+    [field, values, _, condition] = extract_options(options)
+
+    if condition do
+      [text_phrase: Keyword.put([], to_atom(field), values)]
+    else
+      []
+    end
   end
 
   @doc false
   def text_phrase_prefix(options) do
-    [field, values, _] = extract_options(options)
-    [text_phrase_prefix: Keyword.put([], to_atom(field), values)]
+    [field, values, _, condition] = extract_options(options)
+
+    if condition do
+      [text_phrase_prefix: Keyword.put([], to_atom(field), values)]
+    else
+      []
+    end
   end
 
   @doc false
@@ -613,5 +721,21 @@ defmodule Tirexs.Query do
     end
     search = definition[:search]
     Tirexs.bump(search, uri)._search(urn, {params})
+  end
+
+  @doc false
+  def normalize_options(options) do
+    condition =
+      cond do
+        Keyword.has_key?(options, :if) -> !!options[:if]
+        Keyword.has_key?(options, :not) -> !options[:not]
+        true -> true
+      end
+    options =
+      options
+      |> Keyword.delete(:if)
+      |> Keyword.delete(:not)
+
+    {condition, options}
   end
 end

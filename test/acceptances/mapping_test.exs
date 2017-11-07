@@ -76,6 +76,6 @@ defmodule Acceptances.MappingTest do
 
     %{article: properties} = mappings
 
-    assert %{dynamic: "false", _parent: %{type: "parent"}, _routing: %{required: true}, properties: %{city: %{type: "string"}, coordinates: %{type: "geo_point"}, country: %{type: "string"}, full_address: %{analyzer: "autocomplete_analyzer", type: "string"}, housenumber: %{index: "not_analyzed", type: "string"}, postcode: %{index: "not_analyzed", type: "string"}, road: %{type: "string"}, suburb: %{type: "string"}}} == properties
+    assert %{_parent: %{type: "parent"}, _routing: %{required: true}, dynamic: "false", properties: %{coordinates: %{type: "geo_point"}, city: %{type: "text"}, country: %{type: "text"}, full_address: %{analyzer: "autocomplete_analyzer", type: "text"}, housenumber: %{type: "keyword"}, postcode: %{type: "keyword"}, road: %{type: "text"}, suburb: %{type: "text"}}} == properties
   end
 end
